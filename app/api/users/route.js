@@ -1,17 +1,6 @@
-import { MongoClient } from 'mongodb';
-import dotenv from 'dotenv';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
-
-dotenv.config();
-
-const uri = process.env.MONGODB_URI;
-
-async function getClient() {
-  const client = new MongoClient(uri);
-  await client.connect();
-  return client;
-}
+import dbConnect from '@/lib/db'; // Importa dbConnect
 
 export async function POST(req) {
   try {
@@ -19,7 +8,7 @@ export async function POST(req) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const client = await getClient();
+    const client = await dbConnect(); // Llama a dbConnect
     const db = client.db();
     const usersCollection = db.collection('users');
 
@@ -31,12 +20,10 @@ export async function POST(req) {
 
     await usersCollection.insertOne(user);
 
+    await client.close(); // Cierra la conexión
     return NextResponse.json(user, { status: 201 });
   } catch (error) {
     console.error('Error al registrar usuario:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
-  } finally {
-    const client = await getClient();
-    await client.close();
   }
 }

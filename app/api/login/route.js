@@ -1,25 +1,15 @@
-import { MongoClient } from 'mongodb';
-import dotenv from 'dotenv';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import dbConnect from '@/lib/db'; // Importa dbConnect
 
-dotenv.config();
-
-const uri = process.env.MONGODB_URI;
 const jwtSecret = process.env.JWT_SECRET;
-
-async function getClient() {
-  const client = new MongoClient(uri);
-  await client.connect();
-  return client;
-}
 
 export async function POST(req) {
   try {
     const { username, password } = await req.json();
 
-    const client = await getClient();
+    const client = await dbConnect(); // Llama a dbConnect
     const db = client.db();
     const usersCollection = db.collection('users');
 
@@ -37,12 +27,10 @@ export async function POST(req) {
 
     const token = jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: '1h' });
 
+    await client.close(); // Cierra la conexión
     return NextResponse.json({ token });
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
-  } finally {
-    const client = await getClient();
-    await client.close();
   }
 }
