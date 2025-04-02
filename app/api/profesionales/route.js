@@ -58,7 +58,8 @@ export async function POST(req) {
         console.log('Conectando a MongoDB...');
         const client = await getClient();
         const db = client.db();
-        const collection = db.collection('profesionales');
+        const profesionalesCollection = db.collection('profesionales');
+        const usersCollection = db.collection('users');
 
         const profesional = {
             nombre,
@@ -74,8 +75,14 @@ export async function POST(req) {
         };
 
         console.log('Insertando profesional en MongoDB:', profesional);
-        await collection.insertOne(profesional);
+        await profesionalesCollection.insertOne(profesional);
         console.log('Profesional insertado con éxito');
+
+        // Actualizar el campo professionalFormCompleted en la colección users
+        await usersCollection.updateOne(
+            { _id: new ObjectId(userId) },
+            { $set: { professionalFormCompleted: true } }
+        );
 
         return NextResponse.json(profesional, { status: 201 });
     } catch (error) {

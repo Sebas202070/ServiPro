@@ -4,7 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
-export default function UserRegisterForm() {
+export default function ProfesionalRegisterForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -19,7 +19,7 @@ export default function UserRegisterForm() {
         username,
         password,
         email,
-        userType: 'usuario', // Establecer el tipo de usuario como "usuario"
+        userType: 'profesional', // Establecer el tipo de usuario como "usuario"
       });
       console.log('Usuario registrado con éxito.');
       alert('Usuario registrado con éxito.');

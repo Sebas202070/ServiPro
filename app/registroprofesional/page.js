@@ -1,13 +1,16 @@
 'use client';
 
-import UserRegisterForm from "@/components/ProfesionalSignInForm";
+import ProfesionalRegisterForm from "@/components/ProfesionalRegistro";
+
+
+
 
 
 
 export default function RegistroUsuarioPage() {
   return (
     <div className="flex justify-center items-center h-screen">
-      <UserRegisterForm />
+      <ProfesionalRegisterForm/>
     </div>
   );
 }
