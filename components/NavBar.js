@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -13,7 +14,7 @@ export default function Navbar() {
         <nav className="bg-gray-800 p-4">
             <div className="container mx-auto flex justify-between items-center">
                 <Link href="/" className="text-white font-bold text-xl">
-                    Mi Aplicación
+                   ServiPro
                 </Link>
                 <div className="flex space-x-4">
                     {session ? (
